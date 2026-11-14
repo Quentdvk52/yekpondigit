@@ -72,7 +72,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 
 ---
 
-### 🔹 PHASE 3 : Boutique Publique & Fiche Produit Complète
+### 🔹 PHASE 3 : Boutique Publique & Fiche Produit Complète (🟢 Terminé)
 - **Objectifs** :
   - Page d'accueil dynamique : Hero produit, compteurs de confiance animés, catégories 3D tilt, produits vedettes, étapes « Comment ça marche », avis clients, FAQ.
   - Page `/boutique` avec filtres combinés (type, stack, secteur, prix, licence, démo), recherche instantanée tolérante FTS, tri, modes grille/liste.
@@ -178,7 +178,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 | **REQ-00** | Socle, TS strict, Tailwind 4, CSP, Health | 0 | `src/app/api/health/route.ts`, `src/lib/env.ts`, `src/proxy.ts` | Typecheck, Build, Health test | 🟢 Terminé |
 | **REQ-01** | Tokens, UI-kit, Thème Dark/Light, Layout | 1 | `src/components/ui/*`, `src/components/layout/*`, `src/app/ui-kit/*` | axe-core, Responsive 5 viewports, Tests devises | 🟢 Terminé |
 | **REQ-02** | Schéma PostgreSQL, RLS, Seed DEMO, Auth | 2 | `db/schema.sql`, `src/server/auth/*`, `src/app/admin/produits/*` | Tests RLS, Tests IDOR, Auth test, Typecheck, Build | 🟢 Terminé |
-| **REQ-03** | Accueil, Catalogue, Recherche ⌘K, Fiche Produit | 3 | `src/app/[locale]/(public)/boutique/*`, `src/components/product/*` | Lighthouse budgets, SEO JSON-LD | ⏳ En attente |
+| **REQ-03** | Accueil, Catalogue, Recherche ⌘K, Fiche Produit | 3 | `src/app/page.tsx`, `src/app/boutique/*`, `src/app/produit/[slug]/*` | Lighthouse budgets, SEO JSON-LD, Sitemap, Typecheck, Build | 🟢 Terminé |
 | **REQ-04** | Système de Démo sandboxé & isolé | 4 | `src/app/[locale]/(public)/demo/*`, `src/components/demo/*` | Tests SSRF, CSP frame-src | ⏳ En attente |
 | **REQ-05** | Panier, Checkout, Adapters Paiement, Webhooks | 5 | `src/server/payments/*`, `src/app/api/webhooks/*` | E2E Achat Sandbox, Tests Idempotence | ⏳ En attente |
 | **REQ-06** | Licences HMAC, Téléchargements signés S3, Compte | 6 | `src/server/licenses/*`, `src/server/downloads/*`, `src/app/[locale]/(account)/*` | Tests Quotas, Test Token signé | ⏳ En attente |
