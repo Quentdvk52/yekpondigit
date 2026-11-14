@@ -175,8 +175,8 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 
 | Réf Exigence | Description | Phase | Fichiers Clés | Tests Associés | Statut |
 |---|---|---|---|---|---|
-| **REQ-00** | Socle, TS strict, Tailwind 4, CSP, Health | 0 | `src/app/api/health/route.ts`, `src/lib/env.ts`, `src/proxy.ts` | Typecheck, Build, Health test | 🔄 En cours |
-| **REQ-01** | Tokens, UI-kit, Thème Dark/Light, Layout | 1 | `src/components/ui/*`, `src/app/[locale]/layout.tsx` | axe-core, Responsive 5 viewports | ⏳ En attente |
+| **REQ-00** | Socle, TS strict, Tailwind 4, CSP, Health | 0 | `src/app/api/health/route.ts`, `src/lib/env.ts`, `src/proxy.ts` | Typecheck, Build, Health test | 🟢 Terminé |
+| **REQ-01** | Tokens, UI-kit, Thème Dark/Light, Layout | 1 | `src/components/ui/*`, `src/components/layout/*`, `src/app/ui-kit/*` | axe-core, Responsive 5 viewports, Tests devises | 🟢 Terminé |
 | **REQ-02** | Schéma PostgreSQL, RLS, Seed DEMO, Auth | 2 | `db/schema.sql`, `src/server/auth/*`, `src/app/admin/products/*` | Tests RLS, Tests IDOR, Auth test | ⏳ En attente |
 | **REQ-03** | Accueil, Catalogue, Recherche ⌘K, Fiche Produit | 3 | `src/app/[locale]/(public)/boutique/*`, `src/components/product/*` | Lighthouse budgets, SEO JSON-LD | ⏳ En attente |
 | **REQ-04** | Système de Démo sandboxé & isolé | 4 | `src/app/[locale]/(public)/demo/*`, `src/components/demo/*` | Tests SSRF, CSP frame-src | ⏳ En attente |
