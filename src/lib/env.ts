@@ -35,8 +35,17 @@ const envSchema = z.object({
   RESEND_API_KEY: z.string().optional(),
   EMAIL_FROM: z.string().default("YEKPON DIGIT <contact@yekpondigit.com>"),
 
-  // Providers
-  PAYMENT_PROVIDERS_ENABLED: z.string().default("sandbox"),
+  // Providers de Paiement
+  PAYMENT_PROVIDERS_ENABLED: z.string().default("sandbox,fedapay,kkiapay,stripe"),
+  FEDAPAY_SECRET_KEY: z.string().optional(),
+  FEDAPAY_PUBLIC_KEY: z.string().optional(),
+  FEDAPAY_WEBHOOK_SECRET: z.string().optional(),
+  KKIAPAY_PRIVATE_KEY: z.string().optional(),
+  KKIAPAY_PUBLIC_KEY: z.string().optional(),
+  KKIAPAY_SECRET: z.string().optional(),
+  STRIPE_SECRET_KEY: z.string().optional(),
+  STRIPE_WEBHOOK_SECRET: z.string().optional(),
+  SANDBOX_WEBHOOK_SECRET: z.string().default("dev-sandbox-webhook-secret-key-32ch"),
 
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
 });

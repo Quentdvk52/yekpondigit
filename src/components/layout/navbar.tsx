@@ -17,11 +17,13 @@ import {
   Laptop,
 } from "lucide-react";
 import { CurrencySelector } from "./currency-selector";
+import { useCart } from "@/contexts/cart-context";
 import { CommandPalette } from "./command-palette";
 import { Sheet } from "@/components/ui/sheet";
 
 export function Navbar() {
   const pathname = usePathname();
+  const { itemCount } = useCart();
   const [isCommandOpen, setIsCommandOpen] = React.useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
   const [isCategoriesOpen, setIsCategoriesOpen] = React.useState(false);
@@ -140,9 +142,11 @@ export function Navbar() {
               className="relative p-2.5 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-zinc-300 hover:text-white transition-colors"
             >
               <ShoppingCart className="w-4 h-4" />
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-sky-500 text-slate-950 font-black text-[10px] flex items-center justify-center">
-                0
-              </span>
+              {itemCount > 0 && (
+                <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-sky-500 text-slate-950 font-black text-[10px] flex items-center justify-center animate-pulse">
+                  {itemCount}
+                </span>
+              )}
             </Link>
 
             {/* Compte Client */}
@@ -184,6 +188,21 @@ export function Navbar() {
 
           <div className="space-y-2">
             <p className="text-[11px] font-bold text-zinc-400 uppercase tracking-widest px-2">Navigation</p>
+            <Link
+              href="/panier"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="flex items-center justify-between px-3 py-2 rounded-xl text-sm font-semibold text-zinc-200 hover:text-white hover:bg-white/10 transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                <ShoppingCart className="w-4 h-4 text-sky-400" />
+                <span>Mon Panier</span>
+              </span>
+              {itemCount > 0 && (
+                <span className="px-2 py-0.5 rounded-full bg-sky-500 text-slate-950 font-black text-xs">
+                  {itemCount}
+                </span>
+              )}
+            </Link>
             {navLinks.map((link) => (
               <Link
                 key={link.href}

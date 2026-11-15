@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { CurrencyProvider } from "@/contexts/currency-context";
+import { CartProvider } from "@/contexts/cart-context";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { CookieBanner } from "@/components/layout/cookie-banner";
@@ -21,10 +22,12 @@ export default function RootLayout({
     <html lang="fr" className="dark">
       <body className="antialiased selection:bg-sky-500/30 selection:text-sky-200 bg-slate-950 text-white min-h-screen flex flex-col justify-between">
         <CurrencyProvider>
-          <Navbar />
-          <div className="flex-1 flex flex-col">{children}</div>
-          <Footer />
-          <CookieBanner />
+          <CartProvider>
+            <Navbar />
+            <div className="flex-1 flex flex-col">{children}</div>
+            <Footer />
+            <CookieBanner />
+          </CartProvider>
         </CurrencyProvider>
       </body>
     </html>

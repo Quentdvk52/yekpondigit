@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
   Code2,
@@ -14,7 +15,10 @@ import {
   Smartphone,
   ExternalLink,
   Laptop,
+  ShoppingCart,
+  CheckCircle2,
 } from "lucide-react";
+import { useCart } from "@/contexts/cart-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { PriceTag } from "@/components/ui/price-tag";
@@ -27,7 +31,10 @@ export interface ProductDetailClientProps {
 }
 
 export function ProductDetailClient({ product }: ProductDetailClientProps) {
+  const router = useRouter();
+  const { addItem } = useCart();
   const [selectedLicenseCode, setSelectedLicenseCode] = useState<string>("standard");
+  const [addedSuccess, setAddedSuccess] = useState(false);
 
   const currentLicense =
     product.licenses.find((l) => l.code === selectedLicenseCode) ?? product.licenses[0];
@@ -36,6 +43,35 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
   const currentPrice = currentLicense?.price_xof ?? standardPrice;
 
   const mainDemo = product.demos[0];
+
+  const handleAddToCart = () => {
+    addItem({
+      productId: product.id,
+      productSlug: product.slug,
+      productTitle: product.title_fr,
+      coverImage: product.media[0]?.url ?? null,
+      licenseCode: (currentLicense?.code ?? "standard") as "standard" | "extended",
+      licenseName: currentLicense?.name ?? "Licence Standard",
+      unitPriceXof: currentPrice,
+      addons: [],
+    });
+    setAddedSuccess(true);
+    setTimeout(() => setAddedSuccess(false), 2500);
+  };
+
+  const handleBuyNow = () => {
+    addItem({
+      productId: product.id,
+      productSlug: product.slug,
+      productTitle: product.title_fr,
+      coverImage: product.media[0]?.url ?? null,
+      licenseCode: (currentLicense?.code ?? "standard") as "standard" | "extended",
+      licenseName: currentLicense?.name ?? "Licence Standard",
+      unitPriceXof: currentPrice,
+      addons: [],
+    });
+    router.push("/commande");
+  };
 
   return (
     <div className="space-y-12">
@@ -182,21 +218,43 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
 
             {/* Boutons d'Action Principaux */}
             <div className="space-y-3 pt-2">
-              <Link
-                href={`/commande?product=${product.id}&license=${selectedLicenseCode}`}
-                className="w-full block"
+              <Button
+                type="button"
+                size="lg"
+                onClick={handleBuyNow}
+                className="w-full h-12 text-sm sm:text-base font-bold gap-2 shadow-lg shadow-primary/20"
               >
-                <Button size="lg" className="w-full h-12 text-sm sm:text-base font-bold gap-2">
-                  Commander cette Solution
-                  <ArrowRight className="h-4 w-4" />
-                </Button>
-              </Link>
+                Commander cette Solution
+                <ArrowRight className="h-4 w-4" />
+              </Button>
+
+              <Button
+                type="button"
+                variant="outline"
+                size="lg"
+                onClick={handleAddToCart}
+                className={`w-full h-11 text-xs sm:text-sm font-semibold gap-2 border-primary/30 transition-all ${
+                  addedSuccess ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/50" : ""
+                }`}
+              >
+                {addedSuccess ? (
+                  <>
+                    <CheckCircle2 className="h-4 w-4 text-emerald-400" />
+                    <span>Ajouté au panier avec succès !</span>
+                  </>
+                ) : (
+                  <>
+                    <ShoppingCart className="h-4 w-4 text-primary" />
+                    <span>Ajouter au Panier</span>
+                  </>
+                )}
+              </Button>
 
               {mainDemo && (
                 <a href="#demo" className="w-full block">
-                  <Button variant="outline" size="lg" className="w-full h-11 text-xs sm:text-sm gap-2">
-                    <Eye className="h-4 w-4" />
-                    Tester la Démo Interactive
+                  <Button variant="ghost" size="sm" className="w-full h-9 text-xs gap-2 text-muted-foreground hover:text-foreground">
+                    <Eye className="h-3.5 w-3.5" />
+                    Tester la Démo Interactive ci-dessous
                   </Button>
                 </a>
               )}
@@ -339,19 +397,33 @@ export function ProductDetailClient({ product }: ProductDetailClientProps) {
       </section>
 
       {/* 4. Barre d'Achat Sticky Mobile (uniquement affichée sur mobile) */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/80 bg-slate-950/95 p-3 backdrop-blur-lg sm:hidden flex items-center justify-between shadow-2xl">
+      <div className="fixed bottom-0 left-0 right-0 z-40 border-t border-border/80 bg-slate-950/95 p-3 backdrop-blur-lg sm:hidden flex items-center justify-between gap-2 shadow-2xl">
         <div>
           <span className="text-[10px] text-muted-foreground uppercase font-bold">Total</span>
-          <div className="font-mono font-bold text-base text-white">
+          <div className="font-mono font-bold text-sm text-white">
             {currentPrice.toLocaleString("fr-FR")} FCFA
           </div>
         </div>
-        <Link href={`/commande?product=${product.id}&license=${selectedLicenseCode}`}>
-          <Button size="sm" className="h-10 px-5 text-xs font-bold gap-1.5">
+        <div className="flex items-center gap-2">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            onClick={handleAddToCart}
+            className="h-10 px-3 text-xs"
+          >
+            <ShoppingCart className="h-4 w-4" />
+          </Button>
+          <Button
+            type="button"
+            size="sm"
+            onClick={handleBuyNow}
+            className="h-10 px-4 text-xs font-bold gap-1.5 shadow-md shadow-primary/20"
+          >
             Commander
             <ArrowRight className="h-3.5 w-3.5" />
           </Button>
-        </Link>
+        </div>
       </div>
     </div>
   );
