@@ -15,7 +15,7 @@ if (process.env.NODE_ENV === "production") {
     ssl: { rejectUnauthorized: false },
     max: 20,
     idleTimeoutMillis: 30000,
-    connectionTimeoutMillis: 5000,
+    connectionTimeoutMillis: 15000,
   });
 } else {
   if (!global.__pgPool) {
@@ -24,7 +24,7 @@ if (process.env.NODE_ENV === "production") {
       ssl: { rejectUnauthorized: false },
       max: 10,
       idleTimeoutMillis: 30000,
-      connectionTimeoutMillis: 5000,
+      connectionTimeoutMillis: 15000,
     });
   }
   pool = global.__pgPool;

@@ -84,7 +84,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 
 ---
 
-### 🔹 PHASE 4 : Système de Démonstrations Sécurisé
+### 🔹 PHASE 4 : Système de Démonstrations Sécurisé (🟢 Terminé)
 - **Objectifs** :
   - Implémentation des 6 types de démos (`live_iframe`, `video`, `gallery`, `mobile_mockup`, `emulator`, `credentials_only`).
   - Page dédiée plein écran `/demo/[slug]` avec sélecteur d'appareil (Desktop, Tablette, Mobile) et bandeau de rappel « Mode Démo ».
@@ -179,7 +179,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 | **REQ-01** | Tokens, UI-kit, Thème Dark/Light, Layout | 1 | `src/components/ui/*`, `src/components/layout/*`, `src/app/ui-kit/*` | axe-core, Responsive 5 viewports, Tests devises | 🟢 Terminé |
 | **REQ-02** | Schéma PostgreSQL, RLS, Seed DEMO, Auth | 2 | `db/schema.sql`, `src/server/auth/*`, `src/app/admin/produits/*` | Tests RLS, Tests IDOR, Auth test, Typecheck, Build | 🟢 Terminé |
 | **REQ-03** | Accueil, Catalogue, Recherche ⌘K, Fiche Produit | 3 | `src/app/page.tsx`, `src/app/boutique/*`, `src/app/produit/[slug]/*` | Lighthouse budgets, SEO JSON-LD, Sitemap, Typecheck, Build | 🟢 Terminé |
-| **REQ-04** | Système de Démo sandboxé & isolé | 4 | `src/app/[locale]/(public)/demo/*`, `src/components/demo/*` | Tests SSRF, CSP frame-src | ⏳ En attente |
+| **REQ-04** | Système de Démo sandboxé & isolé | 4 | `src/app/demo/[slug]/*`, `src/components/demo/*`, `src/server/security/*` | Tests SSRF, AES-256-GCM, Typecheck, Build | 🟢 Terminé |
 | **REQ-05** | Panier, Checkout, Adapters Paiement, Webhooks | 5 | `src/server/payments/*`, `src/app/api/webhooks/*` | E2E Achat Sandbox, Tests Idempotence | ⏳ En attente |
 | **REQ-06** | Licences HMAC, Téléchargements signés S3, Compte | 6 | `src/server/licenses/*`, `src/server/downloads/*`, `src/app/[locale]/(account)/*` | Tests Quotas, Test Token signé | ⏳ En attente |
 | **REQ-07** | Back-office complet, Audit logs, 2FA Admin | 7 | `src/app/admin/*`, `src/server/audit/*` | Tests Rôles RBAC, Audit logging | ⏳ En attente |

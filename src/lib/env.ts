@@ -8,7 +8,7 @@ const envSchema = z.object({
   NEXT_PUBLIC_DEMO_BASE_URL: z.string().url().default("http://localhost:3001"),
 
   // Base de données PostgreSQL
-  DATABASE_URL: z.string().min(1, "DATABASE_URL is required"),
+  DATABASE_URL: z.string().min(1).default("postgresql://localhost:5432/yekpon_digit"),
   NEON_API_KEY: z.string().optional(),
 
   // Stockage S3
