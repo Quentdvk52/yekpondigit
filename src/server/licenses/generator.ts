@@ -40,6 +40,15 @@ export function verifyLicenseSignature(
   email: string,
   expectedSignature: string
 ): boolean {
-  const actual = signLicenseKey(key, productId, email);
-  return crypto.timingSafeEqual(Buffer.from(actual), Buffer.from(expectedSignature));
+  try {
+    const actual = signLicenseKey(key, productId, email);
+    const bufActual = Buffer.from(actual, "utf8");
+    const bufExpected = Buffer.from(expectedSignature, "utf8");
+    if (bufActual.length !== bufExpected.length) {
+      return false;
+    }
+    return crypto.timingSafeEqual(bufActual, bufExpected);
+  } catch {
+    return false;
+  }
 }
