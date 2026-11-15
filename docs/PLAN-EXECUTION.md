@@ -184,7 +184,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 | **REQ-04** | Système de Démo sandboxé & isolé | 4 | `src/app/demo/[slug]/*`, `src/components/demo/*`, `src/server/security/*` | Tests SSRF, AES-256-GCM, Typecheck, Build | 🟢 Terminé |
 | **REQ-05** | Panier, Checkout, Adapters Paiement, Webhooks | 5 | `src/server/payments/*`, `src/app/api/webhooks/*`, `src/app/panier/*`, `src/app/commande/*` | Tests Achat Sandbox, Tests Idempotence, Tests Coupons | 🟢 Terminé |
 | **REQ-06** | Licences HMAC, Téléchargements signés S3, Compte | 6 | `src/server/licenses/*`, `src/server/downloads/*`, `src/app/compte/*` | Tests Quotas, Test Token signé, Espace client | 🟢 Terminé |
-| **REQ-07** | Back-office complet, Audit logs, 2FA Admin | 7 | `src/app/admin/*`, `src/server/audit/*` | Tests Rôles RBAC, Audit logging | ⏳ En attente |
+| **REQ-07** | Back-office complet, Audit logs, 2FA Admin | 7 | `src/app/admin/*`, `src/server/audit/*`, `src/components/admin/*` | Tests Rôles RBAC, Audit logging, Remboursements, Licences | 🟢 Terminé |
 | **REQ-08** | Hero 3D R3F, DeviceFrames, Animations GSAP | 8 | `src/components/three/*`, `src/components/motion/*` | PerformanceMonitor, Fallback test | ⏳ En attente |
 | **REQ-09** | Devis sur mesure, i18n FR/EN, PWA | 9 | `src/app/[locale]/(public)/sur-mesure/*`, `src/messages/*` | Validation i18n, PWA Lighthouse | ⏳ En attente |
 | **REQ-10** | Audit OWASP ASVS, Tests de charge, Durcissement | 10 | Tout le projet, `tests/security/*` | Rapport Pentest, ZAP / Audit automatisé | ⏳ En attente |

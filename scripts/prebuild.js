@@ -16,7 +16,14 @@ function mirrorDir(src, dest) {
 }
 
 const appDir = path.resolve("src/app");
-const targetDir = path.resolve(".next/types/app");
+const targets = [
+  path.resolve(".next/types/app"),
+  path.resolve(".next/static/chunks/app"),
+  path.resolve(".next/server/app"),
+];
 
-mirrorDir(appDir, targetDir);
-console.log("Prebuild: .next/types/app mirrored successfully.");
+for (const target of targets) {
+  mirrorDir(appDir, target);
+}
+
+console.log("Prebuild: App directory trees mirrored into .next successfully.");
