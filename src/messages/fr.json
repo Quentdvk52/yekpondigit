@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "home": "Accueil",
+    "shop": "Boutique",
+    "custom": "Sur Mesure",
+    "cart": "Panier",
+    "account": "Mon Compte",
+    "login": "Connexion",
+    "admin": "Administration"
+  },
+  "hero": {
+    "badge": "La 1ère Bibliothèque de Logiciels Clés en Main d'Afrique",
+    "title": "Achetez des projets logiciels prêts à encaisser.",
+    "subtitle": "Applications SaaS, e-commerce, applications mobiles Android & Flutter, logiciels desktop. Testez chaque projet en démo interactive, payez par Mobile Money ou Carte bancaire et téléchargez instantanément le code source avec votre licence.",
+    "exploreCta": "Explorer la Boutique",
+    "customCta": "Demander un Projet Sur Mesure"
+  },
+  "product": {
+    "demo": "Voir la Démo Interactive",
+    "buy": "Commander cette Solution",
+    "sourceCode": "Code Source Complet Inclus",
+    "updates": "Mises à jour incluses",
+    "support": "Support technique garanti",
+    "licenseStandard": "Licence Standard (1 Domaine)",
+    "licenseExtended": "Licence Étendue (Multi-Domaines / SaaS)"
+  },
+  "checkout": {
+    "title": "Finaliser ma Commande",
+    "customerInfo": "Informations Client",
+    "paymentMethod": "Mode de Règlement",
+    "momo": "Mobile Money (MTN, Moov, Celtiis)",
+    "card": "Carte Bancaire (Stripe 3DS)",
+    "sandbox": "Simulateur Sandbox (Tests)",
+    "payNow": "Confirmer et Payer",
+    "secure": "Paiement Sécurisé & Chiffré"
+  },
+  "licenses": {
+    "title": "Mes Licences Logicielles",
+    "active": "Licence Active",
+    "revoked": "Licence Révoquée",
+    "expired": "Licence Expirée",
+    "copy": "Copier la clé",
+    "copied": "Copiée !"
+  }
+}

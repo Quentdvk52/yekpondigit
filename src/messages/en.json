@@ -1,0 +1,45 @@
+{
+  "nav": {
+    "home": "Home",
+    "shop": "Store",
+    "custom": "Custom Software",
+    "cart": "Cart",
+    "account": "My Account",
+    "login": "Sign In",
+    "admin": "Admin"
+  },
+  "hero": {
+    "badge": "Africa's #1 Turnkey Software Marketplace",
+    "title": "Buy turnkey software solutions ready to monetize.",
+    "subtitle": "SaaS applications, multi-vendor marketplaces, native Flutter mobile apps, desktop systems. Test every project in interactive sandboxed demos, pay with Mobile Money or Credit Card, and download the full source code with cryptographic licenses.",
+    "exploreCta": "Explore the Store",
+    "customCta": "Request Custom Software"
+  },
+  "product": {
+    "demo": "Try Interactive Demo",
+    "buy": "Order this Solution",
+    "sourceCode": "Full Source Code Included",
+    "updates": "Updates included",
+    "support": "Guaranteed technical support",
+    "licenseStandard": "Standard License (1 Domain)",
+    "licenseExtended": "Extended License (Multi-Domain / SaaS)"
+  },
+  "checkout": {
+    "title": "Checkout",
+    "customerInfo": "Customer Details",
+    "paymentMethod": "Payment Method",
+    "momo": "Mobile Money (MTN, Moov, Celtiis)",
+    "card": "Credit Card (Stripe 3DS)",
+    "sandbox": "Sandbox Simulator (Testing)",
+    "payNow": "Confirm and Pay",
+    "secure": "Encrypted & Secure Payment"
+  },
+  "licenses": {
+    "title": "My Software Licenses",
+    "active": "Active License",
+    "revoked": "Revoked License",
+    "expired": "Expired License",
+    "copy": "Copy license key",
+    "copied": "Copied!"
+  }
+}
