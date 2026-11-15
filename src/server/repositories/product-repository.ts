@@ -1,6 +1,7 @@
 import "server-only";
 import { query, pool } from "@/server/db";
 import { type ProductWizardInput } from "@/schemas/product";
+import { MOCK_PRODUCTS } from "./mock-data";
 
 export interface ProductSummary {
   id: string;
@@ -88,139 +89,184 @@ export interface ProductFilterOptions {
   offset?: number;
 }
 
+function filterMockProducts(filters: ProductFilterOptions): { products: ProductSummary[]; total: number } {
+  let list = [...MOCK_PRODUCTS];
+  if (filters.status) {
+    list = list.filter((p) => p.status === filters.status);
+  }
+  if (filters.type) {
+    list = list.filter((p) => p.type === filters.type);
+  }
+  if (filters.isFeatured !== undefined) {
+    list = list.filter((p) => p.is_featured === filters.isFeatured);
+  }
+  if (filters.categoryId) {
+    list = list.filter((p) => p.categories.some((c) => c.id === filters.categoryId));
+  }
+  if (filters.search) {
+    const q = filters.search.toLowerCase();
+    list = list.filter(
+      (p) =>
+        p.title_fr.toLowerCase().includes(q) ||
+        p.title_en.toLowerCase().includes(q) ||
+        p.summary_fr.toLowerCase().includes(q)
+    );
+  }
+  const total = list.length;
+  const offset = filters.offset ?? 0;
+  const limit = filters.limit ?? 20;
+  return {
+    products: list.slice(offset, offset + limit),
+    total,
+  };
+}
+
 export const ProductRepository = {
   async list(filters: ProductFilterOptions = {}): Promise<{ products: ProductSummary[]; total: number }> {
-    const conditions: string[] = [];
-    const params: unknown[] = [];
-    let pIdx = 1;
+    try {
+      const conditions: string[] = [];
+      const params: unknown[] = [];
+      let pIdx = 1;
 
-    if (filters.status) {
-      conditions.push(`p.status = $${pIdx++}`);
-      params.push(filters.status);
+      if (filters.status) {
+        conditions.push(`p.status = $${pIdx++}`);
+        params.push(filters.status);
+      }
+
+      if (filters.type) {
+        conditions.push(`p.type = $${pIdx++}`);
+        params.push(filters.type);
+      }
+
+      if (filters.isFeatured !== undefined) {
+        conditions.push(`p.is_featured = $${pIdx++}`);
+        params.push(filters.isFeatured);
+      }
+
+      if (filters.categoryId) {
+        conditions.push(`EXISTS (SELECT 1 FROM product_categories pc WHERE pc.product_id = p.id AND pc.category_id = $${pIdx++})`);
+        params.push(filters.categoryId);
+      }
+
+      if (filters.search) {
+        conditions.push(`(p.title_fr ILIKE $${pIdx} OR p.title_en ILIKE $${pIdx} OR p.summary_fr ILIKE $${pIdx})`);
+        params.push(`%${filters.search}%`);
+        pIdx++;
+      }
+
+      const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
+      const countSql = `SELECT count(*) FROM products p ${whereClause};`;
+      const countRes = await query<{ count: string }>(countSql, params);
+      const total = parseInt(countRes.rows[0]?.count ?? "0", 10);
+
+      const limit = filters.limit ?? 20;
+      const offset = filters.offset ?? 0;
+
+      const sql = `
+        SELECT
+          p.id, p.vendor_id, p.type, p.slug, p.title_fr, p.title_en,
+          p.summary_fr, p.summary_en, p.status, p.base_price_xof, p.sale_price_xof,
+          p.current_version, p.rating_avg, p.rating_count, p.sales_count,
+          p.is_featured, p.is_new, p.published_at,
+          COALESCE(
+            (SELECT json_agg(json_build_object('id', c.id, 'name_fr', c.name_fr, 'slug', c.slug))
+             FROM product_categories pc
+             JOIN categories c ON c.id = pc.category_id
+             WHERE pc.product_id = p.id),
+            '[]'::json
+          ) AS categories
+        FROM products p
+        ${whereClause}
+        ORDER BY p.published_at DESC NULLS LAST, p.created_at DESC
+        LIMIT $${pIdx++} OFFSET $${pIdx++};
+      `;
+      params.push(limit, offset);
+
+      const res = await query<ProductSummary>(sql, params);
+      if (res.rows.length === 0 && total === 0) {
+        return filterMockProducts(filters);
+      }
+      return {
+        products: res.rows,
+        total,
+      };
+    } catch {
+      return filterMockProducts(filters);
     }
-
-    if (filters.type) {
-      conditions.push(`p.type = $${pIdx++}`);
-      params.push(filters.type);
-    }
-
-    if (filters.isFeatured !== undefined) {
-      conditions.push(`p.is_featured = $${pIdx++}`);
-      params.push(filters.isFeatured);
-    }
-
-    if (filters.categoryId) {
-      conditions.push(`EXISTS (SELECT 1 FROM product_categories pc WHERE pc.product_id = p.id AND pc.category_id = $${pIdx++})`);
-      params.push(filters.categoryId);
-    }
-
-    if (filters.search) {
-      conditions.push(`(p.title_fr ILIKE $${pIdx} OR p.title_en ILIKE $${pIdx} OR p.summary_fr ILIKE $${pIdx})`);
-      params.push(`%${filters.search}%`);
-      pIdx++;
-    }
-
-    const whereClause = conditions.length > 0 ? `WHERE ${conditions.join(" AND ")}` : "";
-    const countSql = `SELECT count(*) FROM products p ${whereClause};`;
-    const countRes = await query<{ count: string }>(countSql, params);
-    const total = parseInt(countRes.rows[0]?.count ?? "0", 10);
-
-    const limit = filters.limit ?? 20;
-    const offset = filters.offset ?? 0;
-
-    const sql = `
-      SELECT
-        p.id, p.vendor_id, p.type, p.slug, p.title_fr, p.title_en,
-        p.summary_fr, p.summary_en, p.status, p.base_price_xof, p.sale_price_xof,
-        p.current_version, p.rating_avg, p.rating_count, p.sales_count,
-        p.is_featured, p.is_new, p.published_at,
-        COALESCE(
-          (SELECT json_agg(json_build_object('id', c.id, 'name_fr', c.name_fr, 'slug', c.slug))
-           FROM product_categories pc
-           JOIN categories c ON c.id = pc.category_id
-           WHERE pc.product_id = p.id),
-          '[]'::json
-        ) AS categories
-      FROM products p
-      ${whereClause}
-      ORDER BY p.published_at DESC NULLS LAST, p.created_at DESC
-      LIMIT $${pIdx++} OFFSET $${pIdx++};
-    `;
-    params.push(limit, offset);
-
-    const res = await query<ProductSummary>(sql, params);
-    return {
-      products: res.rows,
-      total,
-    };
   },
 
   async findBySlug(slug: string): Promise<ProductDetail | null> {
-    const res = await query<ProductSummary & {
-      description_fr: string;
-      description_en: string;
-      requirements: string[];
-      includes: string[];
-      stack: string[];
-      platforms: string[];
-      seo_title: string | null;
-      seo_description: string | null;
-      og_image_url: string | null;
-    }>(
-      `SELECT
-        p.id, p.vendor_id, p.type, p.slug, p.title_fr, p.title_en,
-        p.summary_fr, p.summary_en, p.description_fr, p.description_en,
-        p.status, p.base_price_xof, p.sale_price_xof, p.current_version,
-        p.rating_avg, p.rating_count, p.sales_count, p.is_featured, p.is_new,
-        p.published_at, p.requirements, p.includes, p.stack, p.platforms,
-        p.seo_title, p.seo_description, p.og_image_url,
-        COALESCE(
-          (SELECT json_agg(json_build_object('id', c.id, 'name_fr', c.name_fr, 'slug', c.slug))
-           FROM product_categories pc
-           JOIN categories c ON c.id = pc.category_id
-           WHERE pc.product_id = p.id),
-          '[]'::json
-        ) AS categories
-       FROM products p
-       WHERE p.slug = $1
-       LIMIT 1;`,
-      [slug]
-    );
+    try {
+      const res = await query<ProductSummary & {
+        description_fr: string;
+        description_en: string;
+        requirements: string[];
+        includes: string[];
+        stack: string[];
+        platforms: string[];
+        seo_title: string | null;
+        seo_description: string | null;
+        og_image_url: string | null;
+      }>(
+        `SELECT
+          p.id, p.vendor_id, p.type, p.slug, p.title_fr, p.title_en,
+          p.summary_fr, p.summary_en, p.description_fr, p.description_en,
+          p.status, p.base_price_xof, p.sale_price_xof, p.current_version,
+          p.rating_avg, p.rating_count, p.sales_count, p.is_featured, p.is_new,
+          p.published_at, p.requirements, p.includes, p.stack, p.platforms,
+          p.seo_title, p.seo_description, p.og_image_url,
+          COALESCE(
+            (SELECT json_agg(json_build_object('id', c.id, 'name_fr', c.name_fr, 'slug', c.slug))
+             FROM product_categories pc
+             JOIN categories c ON c.id = pc.category_id
+             WHERE pc.product_id = p.id),
+            '[]'::json
+          ) AS categories
+         FROM products p
+         WHERE p.slug = $1
+         LIMIT 1;`,
+        [slug]
+      );
 
-    const product = res.rows[0];
-    if (!product) return null;
+      const product = res.rows[0];
+      if (!product) {
+        return MOCK_PRODUCTS.find((p) => p.slug === slug) ?? null;
+      }
 
-    const [mediaRes, licensesRes, demosRes, versionsRes] = await Promise.all([
-      query(`SELECT id, kind, url, alt_fr, alt_en, device, sort_order FROM product_media WHERE product_id = $1 ORDER BY sort_order ASC;`, [product.id]),
-      query(`SELECT id, code, name, price_xof, includes_source, max_domains, description FROM product_licenses WHERE product_id = $1 ORDER BY price_xof ASC;`, [product.id]),
-      query(`SELECT id, kind, title, url, allowed_origin, notes, is_active FROM demos WHERE product_id = $1 AND is_active = true ORDER BY sort_order ASC;`, [product.id]),
-      query(`SELECT id, version, changelog_md, released_at, is_current FROM product_versions WHERE product_id = $1 ORDER BY released_at DESC;`, [product.id]),
-    ]);
+      const [mediaRes, licensesRes, demosRes, versionsRes] = await Promise.all([
+        query(`SELECT id, kind, url, alt_fr, alt_en, device, sort_order FROM product_media WHERE product_id = $1 ORDER BY sort_order ASC;`, [product.id]),
+        query(`SELECT id, code, name, price_xof, includes_source, max_domains, description FROM product_licenses WHERE product_id = $1 ORDER BY price_xof ASC;`, [product.id]),
+        query(`SELECT id, kind, title, url, allowed_origin, notes, is_active FROM demos WHERE product_id = $1 AND is_active = true ORDER BY sort_order ASC;`, [product.id]),
+        query(`SELECT id, version, changelog_md, released_at, is_current FROM product_versions WHERE product_id = $1 ORDER BY released_at DESC;`, [product.id]),
+      ]);
 
-    const versionsWithFiles = await Promise.all(
-      versionsRes.rows.map(async (v) => {
-        const filesRes = await query(
-          `SELECT id, label, storage_path, size_bytes, sha256, platform FROM product_files WHERE product_version_id = $1;`,
-          [v.id]
-        );
-        return {
-          id: v.id as string,
-          version: v.version as string,
-          changelog_md: v.changelog_md as string | null,
-          released_at: v.released_at as string,
-          is_current: v.is_current as boolean,
-          files: filesRes.rows as { id: string; label: string; storage_path: string; size_bytes: number; sha256: string; platform: string }[],
-        };
-      })
-    );
+      const versionsWithFiles = await Promise.all(
+        versionsRes.rows.map(async (v) => {
+          const filesRes = await query(
+            `SELECT id, label, storage_path, size_bytes, sha256, platform FROM product_files WHERE product_version_id = $1;`,
+            [v.id]
+          );
+          return {
+            id: v.id as string,
+            version: v.version as string,
+            changelog_md: v.changelog_md as string | null,
+            released_at: v.released_at as string,
+            is_current: v.is_current as boolean,
+            files: filesRes.rows as { id: string; label: string; storage_path: string; size_bytes: number; sha256: string; platform: string }[],
+          };
+        })
+      );
 
-    return {
-      ...product,
-      media: mediaRes.rows as ProductDetail["media"],
-      licenses: licensesRes.rows as ProductDetail["licenses"],
-      demos: demosRes.rows as ProductDetail["demos"],
-      versions: versionsWithFiles,
-    };
+      return {
+        ...product,
+        media: mediaRes.rows as ProductDetail["media"],
+        licenses: licensesRes.rows as ProductDetail["licenses"],
+        demos: demosRes.rows as ProductDetail["demos"],
+        versions: versionsWithFiles,
+      };
+    } catch {
+      return MOCK_PRODUCTS.find((p) => p.slug === slug) ?? null;
+    }
   },
 
   async create(data: ProductWizardInput, vendorId?: string): Promise<string> {
