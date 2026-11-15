@@ -185,7 +185,7 @@ Chaque produit dispose d'une page avec démonstration interactive en sandbox (ou
 | **REQ-05** | Panier, Checkout, Adapters Paiement, Webhooks | 5 | `src/server/payments/*`, `src/app/api/webhooks/*`, `src/app/panier/*`, `src/app/commande/*` | Tests Achat Sandbox, Tests Idempotence, Tests Coupons | 🟢 Terminé |
 | **REQ-06** | Licences HMAC, Téléchargements signés S3, Compte | 6 | `src/server/licenses/*`, `src/server/downloads/*`, `src/app/compte/*` | Tests Quotas, Test Token signé, Espace client | 🟢 Terminé |
 | **REQ-07** | Back-office complet, Audit logs, 2FA Admin | 7 | `src/app/admin/*`, `src/server/audit/*`, `src/components/admin/*` | Tests Rôles RBAC, Audit logging, Remboursements, Licences | 🟢 Terminé |
-| **REQ-08** | Hero 3D R3F, DeviceFrames, Animations GSAP | 8 | `src/components/three/*`, `src/components/motion/*` | PerformanceMonitor, Fallback test | ⏳ En attente |
+| **REQ-08** | Hero 3D WebGL Three.js, DeviceFrames, Confettis | 8 | `src/components/three/*`, `src/app/page.tsx` | Tests 3D, Dégradation gracieuse, Fallback CSS | 🟢 Terminé |
 | **REQ-09** | Devis sur mesure, i18n FR/EN, PWA | 9 | `src/app/[locale]/(public)/sur-mesure/*`, `src/messages/*` | Validation i18n, PWA Lighthouse | ⏳ En attente |
 | **REQ-10** | Audit OWASP ASVS, Tests de charge, Durcissement | 10 | Tout le projet, `tests/security/*` | Rapport Pentest, ZAP / Audit automatisé | ⏳ En attente |
 | **REQ-11** | Déploiement Vercel, Live test, Runbook | 11 | `docs/RUNBOOK.md`, Configuration Vercel | Checklist mise en production | ⏳ En attente |

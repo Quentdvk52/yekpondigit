@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { ConfettiCelebration } from "@/components/three/confetti-celebration";
 
 interface OrderSuccessClientProps {
   order: {
@@ -58,6 +59,7 @@ export function OrderSuccessClient({
 
   return (
     <div className="container mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16 space-y-10">
+      <ConfettiCelebration />
       {/* Carte Succès Hero */}
       <div className="rounded-3xl border border-emerald-500/30 bg-gradient-to-b from-emerald-500/10 via-slate-900/60 to-slate-950 p-8 sm:p-12 text-center space-y-6 shadow-2xl relative overflow-hidden">
         <div className="mx-auto w-20 h-20 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20">

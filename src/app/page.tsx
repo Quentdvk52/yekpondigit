@@ -14,6 +14,7 @@ import {
   Terminal,
   HelpCircle,
 } from "lucide-react";
+import { Hero3DScene } from "@/components/three/hero-3d-scene";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionItem } from "@/components/ui/accordion";
@@ -84,6 +85,11 @@ export default async function HomePage() {
                 Demander un Projet Sur Mesure
               </Button>
             </Link>
+          </div>
+
+          {/* Scène 3D Interactive WebGL avec dégradation gracieuse */}
+          <div className="mt-8 max-w-4xl mx-auto">
+            <Hero3DScene />
           </div>
 
           {/* Bandeau de Chiffres Clés */}
